@@ -65,6 +65,7 @@ namespace OpenRA.Mods.Common.Widgets
 		public Func<bool> OnTabKey = () => false;
 		public Func<bool> OnEscKey = () => false;
 		public Func<bool> OnAltKey = () => false;
+		public Func<bool> OnArrowUp = () => false;
 		public Action OnLoseFocus = () => { };
 		public Action OnTextEdited = () => { };
 		public int CursorPosition { get; set; }
@@ -252,6 +253,11 @@ namespace OpenRA.Mods.Common.Widgets
 						return true;
 					break;
 
+				case Keycode.UP:
+					if (OnArrowUp())
+						return true;
+					break;
+
 				case Keycode.LEFT:
 					ResetBlinkCycle();
 					if (CursorPosition > 0)
@@ -365,6 +371,7 @@ namespace OpenRA.Mods.Common.Widgets
 						Game.Renderer.SetClipboardText(Text.Substring(lowestIndex, highestIndex - lowestIndex));
 
 						RemoveSelectedText();
+						OnTextEdited();
 					}
 
 					break;
@@ -530,7 +537,6 @@ namespace OpenRA.Mods.Common.Widgets
 				ClearSelection();
 
 				CursorPosition = lowestIndex;
-				OnTextEdited();
 			}
 		}
 
